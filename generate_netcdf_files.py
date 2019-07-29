@@ -38,26 +38,13 @@ def main(files, var):
 
         # create file and write global attributes
         f = nc.Dataset(out_fname, 'w', format='NETCDF4')
-        f.description = 'EucFACE met data, created by Martin De Kauwe'
+        f.description = '%s: calculated from Randall Donohue’s decompositions of the GIMMS3g NDVI data monthly climatology (1982-2013), created by Martin De Kauwe' % (var)
         f.history = "Created by: %s" % (os.path.basename(__file__))
         f.creation_date = "%s" % (datetime.datetime.now())
         f.contact = "mdekauwe@gmail.com"
 
-        print(out_fname)
-        sys.exit()
-        """
-
-        """
-
-    """
-    fname = "raw/9999010199990131_fper_gimms3g_clim.flt"
-    data = np.fromfile(fname, dtype=np.float32)
-    data = data.reshape(int(meta['nrows']), int(meta['ncols']))
-    data = np.where(data < 0.0, np.nan, data)
-    plt.imshow(data, origin="upper")
-    plt.colorbar()
-    plt.show()
-    """
+        f.close()
+        
 
 if __name__ == "__main__":
 
