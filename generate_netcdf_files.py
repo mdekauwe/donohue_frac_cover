@@ -45,6 +45,84 @@ def main(files, var):
         f.creation_date = "%s" % (datetime.datetime.now())
         f.contact = "mdekauwe@gmail.com"
 
+        # set dimensions
+        f.createDimension('time', None)
+        f.createDimension('z', 1)
+        f.createDimension('y', int(meta['nrows']))
+        f.createDimension('x', int(meta['ncols']))
+
+        z = f.createVariable('z', 'f8', ('z',))
+        z.long_name = "z"
+        z.long_name = "z dimension"
+
+        y = f.createVariable('y', 'f8', ('y',))
+        y.long_name = "y"
+        y.long_name = "y dimension"
+
+        x = f.createVariable('x', 'f8', ('x',))
+        x.long_name = "x"
+        x.long_name = "x dimension"
+
+        year = fname[11:15]
+        month = fname[16:18]
+        day = fname[18:20]
+
+        n_timesteps = 1
+        times = []
+        secs = 0.0
+        for i in range(n_timesteps):
+            times.append(secs)
+            secs += 1800.
+
+        time = f.createVariable('time', 'f8', ('time',))
+        time.units = "seconds since %s 00:00:00" % (year)
+        time.long_name = "time"
+        time.calendar = "standard"
+
+        latitude = f.createVariable('latitude', 'f8', ('y', 'x',))
+        latitude.units = "degrees_north"
+        latitude.missing_value = -9999.
+        latitude.long_name = "Latitude"
+
+        longitude = f.createVariable('longitude', 'f8', ('y', 'x',))
+        longitude.units = "degrees_east"
+        longitude.missing_value = -9999.
+        longitude.long_name = "Longitude"
+
+        varx = f.createVariable('var', 'f8', ('time', 'y', 'x',))
+        varx.units = "[0-1]"
+        varx.missing_value = -9999.
+        if var == "fper":
+            varx.long_name = "fraction persistent vegetation (wood)"
+        elif var == "fcov":
+            varx.long_name = "fraction cover"
+        elif var == "frec":
+            varx.long_name = "fraction recurrent component (grass)"
+
+        meta = {'ncols': 841.0, 'cellsize': 0.05, 'nrows': 681.0,
+                'xllcorner': 111.975, 'yllcorner': -44.025,
+                'nodata_value': -999.0}
+
+        # 111.975 + (841. * 0.05)
+        # -44.025 + (681. * 0.05)
+        lats_top = meta['yllcorner'] + (meta['nrows'] * meta['cellsize'])
+        lats_bot = meta['yllcorner'] + (0 * meta['cellsize'])
+
+        lon_right = meta['xllcorner'] + (meta['ncols'] * meta['cellsize'])
+        lon_left = meta['xllcorner'] + (0 * meta['cellsize'])
+
+        print(lats_top, lats_bot)
+        print(lon_left, lon_right)
+        sys.exit()
+
+        # write data to file
+        x[:] = int(meta['ncols'])
+        y[:] = int(meta['nrows'])
+        z[:] = 1
+        time[:] = times
+        latitude[:] = -33.617778 # Ellsworth 2017, NCC
+        longitude[:] = 150.740278 # Ellsworth 2017, NCC
+
         f.close()
 
 
