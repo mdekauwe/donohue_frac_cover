@@ -111,9 +111,9 @@ def main(files, var):
         lon_right = meta['xllcorner'] + (meta['ncols'] * meta['cellsize'])
         lon_left = meta['xllcorner'] + (0 * meta['cellsize'])
 
-        print(lats_top, lats_bot)
-        print(lon_left, lon_right)
-        sys.exit()
+        lats = np.linspace(lats_bot, lats_top, int(meta['nrows']))
+        lons = np.linspace(lon_left, lon_right, int(meta['ncols']))
+        
 
         # write data to file
         x[:] = int(meta['ncols'])
