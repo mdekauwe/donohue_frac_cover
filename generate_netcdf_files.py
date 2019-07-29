@@ -64,3 +64,11 @@ if __name__ == "__main__":
     var = "fper"
     files = glob.glob("raw/*_%s_gimms3g_clim.flt" % (var))
     main(files, var)
+
+    var = "fcov"
+    files = glob.glob("raw/*_%s_gimms3g_clim.flt" % (var))
+    main(files, var)
+
+    var = "frec"
+    files = glob.glob("raw/*_%s_gimms3g_clim.flt" % (var))
+    main(files, var)
