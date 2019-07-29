@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 """
-Turn the flt files into NetCDF files.
+Turn the flt files for fcov, fper & frec derived from calculated from Randall
+Donohue’s decompositions of the GIMMS3g NDVI data monthly climatology
+(1982-2013) into NetCDF files.
 
 That's all folks.
 """
@@ -44,7 +46,7 @@ def main(files, var):
         f.contact = "mdekauwe@gmail.com"
 
         f.close()
-        
+
 
 if __name__ == "__main__":
 
