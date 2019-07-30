@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 """
-Usin the fcov, fper & frec derived from Randall Donohue’s decompositions of the
-GIMMS3g NDVI data monthly climatology (1982-2013) into NetCDF files, generate
-the patchfrac variable for CABLE
+Using the fcov, fper & frec derived from Randall Donohue’s decompositions of the
+GIMMS3g NDVI data monthly climatology (1982-2013), generate the patchfrac
+variable for CABLE
 
 That's all folks.
 """
@@ -25,5 +25,3 @@ def main(files, var):
 
 
 if __name__ == "__main__":
-
-    
