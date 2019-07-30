@@ -27,6 +27,8 @@ def main(files, var):
     meta = {'ncols': 841.0, 'cellsize': 0.05, 'nrows': 681.0,
             'xllcorner': 111.975, 'yllcorner': -44.025,
             'nodata_value': -999.0}
+    if var == "lai":
+        meta['nodata_value'] = -9999
 
     output_dir = "nc_files"
     if not os.path.exists(output_dir):
