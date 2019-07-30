@@ -34,6 +34,7 @@ def main(files, var):
 
         data = np.fromfile(fname, dtype=np.float32)
         data = data.reshape(int(meta['nrows']), int(meta['ncols']))
+        data = np.flipud(data)
 
         pre, ext = os.path.splitext(os.path.basename(fname))
         out_fname = "%s/%s.nc" % (output_dir,pre)
@@ -81,17 +82,17 @@ def main(files, var):
 
         latitude = f.createVariable('latitude', 'f8', ('y', 'x',))
         latitude.units = "degrees_north"
-        latitude.missing_value = -9999.
+        latitude.missing_value = meta['nodata_value']
         latitude.long_name = "Latitude"
 
         longitude = f.createVariable('longitude', 'f8', ('y', 'x',))
         longitude.units = "degrees_east"
-        longitude.missing_value = -9999.
+        longitude.missing_value = meta['nodata_value']
         longitude.long_name = "Longitude"
 
-        varx = f.createVariable('var', 'f8', ('time', 'y', 'x',))
+        varx = f.createVariable(var, 'f8', ('time', 'y', 'x',))
         varx.units = "[0-1]"
-        varx.missing_value = -9999.
+        varx.missing_value = meta['nodata_value']
         if var == "fper":
             varx.long_name = "fraction persistent vegetation (wood)"
         elif var == "fcov":
@@ -112,16 +113,22 @@ def main(files, var):
         lon_left = meta['xllcorner'] + (0 * meta['cellsize'])
 
         lats = np.linspace(lats_bot, lats_top, int(meta['nrows']))
+        lats = np.repeat(lats, int(meta['ncols']))
+        lats = lats.reshape(int(meta['nrows']), int(meta['ncols']))
+
         lons = np.linspace(lon_left, lon_right, int(meta['ncols']))
-        
+        lons = np.tile(lons, int(meta['nrows']))
+        lons = lons.reshape(int(meta['nrows']), int(meta['ncols']))
 
         # write data to file
         x[:] = int(meta['ncols'])
         y[:] = int(meta['nrows'])
         z[:] = 1
         time[:] = times
-        latitude[:] = -33.617778 # Ellsworth 2017, NCC
-        longitude[:] = 150.740278 # Ellsworth 2017, NCC
+        latitude[:,:] = lats
+        longitude[:,:] = lons
+        varx[0,:,:] =  data.reshape(n_timesteps, int(meta['nrows']),
+                                    int(meta['ncols']))
 
         f.close()
 
