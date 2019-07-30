@@ -22,16 +22,15 @@ import sys
 
 def main():
 
-    fper_files = glob.glob("nc_files/fper/*.nc")
-    frec_files = glob.glob("nc_files/frec/*.nc")
+    fper_fname = "nc_files/fper/mean_fper.nc"
+    frec_fname = "nc_files/frec/mean_frec.nc"
 
-    for fper_fname, frec_fname in zip(fper_files, frec_files):
-        fper = xr.open_dataset(fper_fname)
-        frec = xr.open_dataset(frec_fname)
+    fper = xr.open_dataset(fper_fname)
+    frec = xr.open_dataset(frec_fname)
 
-        plt.imshow(frec.frec)
-        plt.colorbar()
-        sys.exit()
+    plt.imshow(frec.frec[0,:,:])
+    plt.colorbar()
+    
 
 if __name__ == "__main__":
 
