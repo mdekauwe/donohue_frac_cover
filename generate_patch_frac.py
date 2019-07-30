@@ -23,6 +23,10 @@ import sys
 
 def main():
 
+    output_dir = "patch_frac_files"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
     ncols = 841
     nrows = 681
     npfts = 17 # n_tiles -> cable_define_types
@@ -38,7 +42,8 @@ def main():
     grass = frec.frec[0,:,:].values
     bare = 1.0 - tree - grass
     total = tree + grass + bare
-    empty = np.ones((nrows, ncols)) * fill
+    print(np.nanmin(total), np.nanmax(total))
+    empty = np.where(total > 0.00000001, 0.0, total)
 
     # Check sums to less than 1
     #total = frec.frec[0,:,:] + fper.fper[0,:,:]
@@ -47,14 +52,8 @@ def main():
     #plt.colorbar()
     #plt.show()
 
-    plt.imshow(tree)
-    plt.colorbar()
-    plt.show()
-
-
-
     # create file and write global attributes
-    out_fname = "patch_frac.nc"
+    out_fname = os.path.join(output_dir, "patch_frac.nc")
     f = nc.Dataset(out_fname, 'w', format='NETCDF4')
     f.description = 'patchfrac for CABLE, created by Martin De Kauwe'
 
@@ -95,8 +94,9 @@ def main():
     patchfrac.long_name = "Patch frac"
 
     # write data to file
-    x[:] = ncols
-    y[:] = nrows
+    x[:] = np.arange(1, ncols+1)
+    y[:] = np.arange(1, nrows+1)
+    patch[:] = np.arange(1, npfts+1)
     latitude[:,:] = fper.latitude.values
     longitude[:,:] = fper.longitude.values
     patchfrac[0,:,:] = empty   #  evergreen_needleleaf
@@ -117,7 +117,20 @@ def main():
     patchfrac[15,:,:] = empty  #  lakes
     patchfrac[16,:,:] = empty  #  ice
 
+    print(patchfrac.shape)
+    print(tree.shape)
+
+    #plt.imshow(tree)
+    #plt.colorbar()
+    #plt.show()
+
     f.close()
+
+    ds = xr.open_dataset(out_fname)
+    print(ds.patch)
+    plt.imshow(ds.patchfrac[1,:,:])
+    plt.colorbar()
+    plt.show()
 
 if __name__ == "__main__":
 

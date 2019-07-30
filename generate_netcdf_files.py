@@ -60,13 +60,8 @@ def main(files, var):
 
         # set dimensions
         f.createDimension('time', None)
-        f.createDimension('z', 1)
         f.createDimension('y', int(meta['nrows']))
         f.createDimension('x', int(meta['ncols']))
-
-        z = f.createVariable('z', 'f8', ('z',))
-        z.long_name = "z"
-        z.long_name = "z dimension"
 
         y = f.createVariable('y', 'f8', ('y',))
         y.long_name = "y"
@@ -139,9 +134,8 @@ def main(files, var):
         lons = lons.reshape(int(meta['nrows']), int(meta['ncols']))
 
         # write data to file
-        x[:] = int(meta['ncols'])
-        y[:] = int(meta['nrows'])
-        z[:] = 1
+        x[:] = np.arange(1, int(meta['ncols'])+1)
+        y[:] = np.arange(1, int(meta['nrows'])+1)
         time[:] = times
         latitude[:,:] = lats
         longitude[:,:] = lons
