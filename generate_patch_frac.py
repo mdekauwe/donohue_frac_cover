@@ -29,8 +29,8 @@ def main():
     fper = xr.open_dataset(fper_fname)
     frec = xr.open_dataset(frec_fname)
 
-    tree = fper.fper[0,:,:]
-    grass = frec.frec[0,:,:]
+    tree = fper.fper[0,:,:].values
+    grass = frec.frec[0,:,:].values
     bare = 1.0 - tree - grass
     total = tree + grass + bare
     empty = total * 0.0
@@ -42,9 +42,9 @@ def main():
     #plt.colorbar()
     #plt.show()
 
-    #plt.imshow(bare)
-    #plt.colorbar()
-    #plt.show()
+    plt.imshow(tree)
+    plt.colorbar()
+    plt.show()
 
     ncols = 841
     nrows = 681
