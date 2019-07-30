@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 """
-Turn the flt files for fcov, fper & frec derived from calculated from Randall
+Turn the flt files for fcov, fper & frec derived from Randall
 Donohue’s decompositions of the GIMMS3g NDVI data monthly climatology
 (1982-2013) into NetCDF files.
 
 That's all folks.
 """
 __author__ = "Martin De Kauwe"
-__version__ = "1.0 (04.08.2018)"
+__version__ = "1.0 (30.07.2019)"
 __email__ = "mdekauwe@gmail.com"
 
 import pandas as pd
