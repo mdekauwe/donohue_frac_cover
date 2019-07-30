@@ -28,9 +28,22 @@ def main():
     fper = xr.open_dataset(fper_fname)
     frec = xr.open_dataset(frec_fname)
 
-    plt.imshow(frec.frec[0,:,:])
+    tree = fper.fper[0,:,:]
+    grass = frec.frec[0,:,:]
+    bare = 1.0 - tree - grass
+
+
+    # Check sums to less than 1
+    #total = frec.frec[0,:,:] + fper.fper[0,:,:]
+    #total = np.where(total > 1.0, total, np.nan)
+    #plt.imshow(total)
+    #plt.colorbar()
+    #plt.show()
+
+    plt.imshow(bare)
     plt.colorbar()
-    
+    plt.show()
+
 
 if __name__ == "__main__":
 
