@@ -60,13 +60,9 @@ def main():
     f.contact = "mdekauwe@gmail.com"
 
     # set dimensions
-    f.createDimension('patch', npfts)
     f.createDimension('y', nrows)
     f.createDimension('x', ncols)
-
-    patch = f.createVariable('patch', 'f8', ('patch',))
-    patch.long_name = "patch"
-    patch.long_name = "patch dimensions"
+    f.createDimension('patch', npfts)
 
     y = f.createVariable('y', 'f8', ('y',))
     y.long_name = "y"
@@ -75,6 +71,10 @@ def main():
     x = f.createVariable('x', 'f8', ('x',))
     x.long_name = "x"
     x.long_name = "x dimension"
+
+    patch = f.createVariable('patch', 'f8', ('patch',))
+    patch.long_name = "patch"
+    patch.long_name = "patch dimensions"
 
     latitude = f.createVariable('latitude', 'f8', ('y', 'x',))
     latitude.units = "degrees_north"
