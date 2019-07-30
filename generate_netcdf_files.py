@@ -104,7 +104,10 @@ def main(files, var):
         longitude.long_name = "Longitude"
 
         varx = f.createVariable(var, 'f8', ('time', 'y', 'x',))
-        varx.units = "[0-1]"
+        if var == "lai":
+            varx.units = "m2/m2"
+        else:
+            varx.units = "[0-1]"
         varx.missing_value = meta['nodata_value']
         if var == "fper":
             varx.long_name = "fraction persistent vegetation (wood)"
