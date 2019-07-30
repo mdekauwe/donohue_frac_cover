@@ -157,7 +157,6 @@ if __name__ == "__main__":
     files = glob.glob("raw/%s/*_%s_gimms3g_clim.flt" % (var, var))
     main(files, var)
 
-    sys.exit()
     var = "fcov"
     files = glob.glob("raw/%s/*_%s_gimms3g_clim.flt" % (var, var))
     main(files, var)
