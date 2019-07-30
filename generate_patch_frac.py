@@ -23,6 +23,11 @@ import sys
 
 def main():
 
+    ncols = 841
+    nrows = 681
+    npfts = 17 # n_tiles -> cable_define_types
+    fill = -999.0
+
     fper_fname = "nc_files/fper/mean_fper.nc"
     frec_fname = "nc_files/frec/mean_frec.nc"
 
@@ -33,7 +38,7 @@ def main():
     grass = frec.frec[0,:,:].values
     bare = 1.0 - tree - grass
     total = tree + grass + bare
-    empty = total * 0.0
+    empty = np.ones((nrows, ncols)) * fill
 
     # Check sums to less than 1
     #total = frec.frec[0,:,:] + fper.fper[0,:,:]
@@ -41,14 +46,12 @@ def main():
     #plt.imshow(total)
     #plt.colorbar()
     #plt.show()
-    
+
     plt.imshow(tree)
     plt.colorbar()
     plt.show()
 
-    ncols = 841
-    nrows = 681
-    npfts = 17 # n_tiles -> cable_define_types
+
 
     # create file and write global attributes
     out_fname = "patch_frac.nc"
@@ -78,17 +81,17 @@ def main():
 
     latitude = f.createVariable('latitude', 'f8', ('y', 'x',))
     latitude.units = "degrees_north"
-    latitude.missing_value = -999.
+    latitude.missing_value = fill
     latitude.long_name = "Latitude"
 
     longitude = f.createVariable('longitude', 'f8', ('y', 'x',))
     longitude.units = "degrees_east"
-    longitude.missing_value = -999.
+    longitude.missing_value = fill
     longitude.long_name = "Longitude"
 
     patchfrac = f.createVariable("patchfrac", 'f8', ('patch', 'y', 'x',))
     patchfrac.units = "[0-1]"
-    patchfrac.missing_value = -999.
+    patchfrac.missing_value = fill
     patchfrac.long_name = "Patch frac"
 
     # write data to file
