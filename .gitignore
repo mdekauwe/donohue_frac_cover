@@ -1,3 +1,4 @@
 nc_files/*
 raw/*
 .DS_Store
+*.nc
