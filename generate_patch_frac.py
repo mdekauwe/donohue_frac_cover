@@ -41,7 +41,7 @@ def main():
     #plt.imshow(total)
     #plt.colorbar()
     #plt.show()
-
+    
     plt.imshow(tree)
     plt.colorbar()
     plt.show()
