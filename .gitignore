@@ -1,2 +1,3 @@
 nc_files/*
-raw/* 
+raw_fcov_fper_frec/*
+.DS_Store
