@@ -81,9 +81,9 @@ def main(files, var):
             month = fname[32:34]
             day = fname[34:36]
         else:
-            year = fname[11:15]
-            month = fname[16:18]
-            day = fname[18:20]
+            year = fname[16:20]
+            month = fname[21:23]
+            day = fname[23:25]
 
         n_timesteps = 1
         times = []
@@ -157,6 +157,7 @@ if __name__ == "__main__":
     files = glob.glob("raw/%s/*_%s_gimms3g_clim.flt" % (var, var))
     main(files, var)
 
+    sys.exit()
     var = "fcov"
     files = glob.glob("raw/%s/*_%s_gimms3g_clim.flt" % (var, var))
     main(files, var)

@@ -15,7 +15,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import glob
-import netCDF4 as nc
+import xarray as xr
 import datetime
 import os
 import sys
@@ -26,7 +26,12 @@ def main():
     frec_files = glob.glob("nc_files/frec/*.nc")
 
     for fper_fname, frec_fname in zip(fper_files, frec_files):
-        print(fper_fname, frec_fname)
+        fper = xr.open_dataset(fper_fname)
+        frec = xr.open_dataset(frec_fname)
+
+        plt.imshow(frec.frec)
+        plt.colorbar()
+        sys.exit()
 
 if __name__ == "__main__":
 
