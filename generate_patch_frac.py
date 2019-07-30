@@ -20,8 +20,14 @@ import datetime
 import os
 import sys
 
-def main(files, var):
+def main():
 
+    fper_files = glob.glob("nc_files/fper/*.nc")
+    frec_files = glob.glob("nc_files/frec/*.nc")
 
+    for fper_fname, frec_fname in zip(fper_files, frec_files):
+        print(fper_fname, frec_fname)
 
 if __name__ == "__main__":
+
+    main()
