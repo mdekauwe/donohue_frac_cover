@@ -49,7 +49,11 @@ def main(files, var):
 
         # create file and write global attributes
         f = nc.Dataset(out_fname, 'w', format='NETCDF4')
-        f.description = '%s: calculated from Randall Donohue’s decompositions of the GIMMS3g NDVI data monthly climatology (1982-2013), created by Martin De Kauwe' % (var)
+
+        if var == "lai":
+            f.description = 'GIMMS3g LAI data, created by Martin De Kauwe'
+        else:
+            f.description = '%s: calculated from Randall Donohue’s decompositions of the GIMMS3g NDVI data monthly climatology (1982-2013), created by Martin De Kauwe' % (var)
         f.history = "Created by: %s" % (os.path.basename(__file__))
         f.creation_date = "%s" % (datetime.datetime.now())
         f.contact = "mdekauwe@gmail.com"
