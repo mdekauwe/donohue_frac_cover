@@ -23,7 +23,7 @@ import sys
 
 def main():
 
-    output_dir = "patch_frac_files"
+    output_dir = "nc_files/patch_frac"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -117,9 +117,6 @@ def main():
     patchfrac[15,:,:] = empty  #  lakes
     patchfrac[16,:,:] = empty  #  ice
 
-    print(patchfrac.shape)
-    print(tree.shape)
-
     #plt.imshow(tree)
     #plt.colorbar()
     #plt.show()
@@ -127,7 +124,7 @@ def main():
     f.close()
 
     ds = xr.open_dataset(out_fname)
-    print(ds.patch)
+    print(ds)
     plt.imshow(ds.patchfrac[1,:,:])
     plt.colorbar()
     plt.show()
