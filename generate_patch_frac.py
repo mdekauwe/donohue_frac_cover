@@ -40,17 +40,13 @@ def main():
 
     tree = fper.fper[0,:,:].values
     grass = frec.frec[0,:,:].values
-    bare = 1.0 - tree - grass
-    total = tree + grass + bare
-    print(np.nanmin(total), np.nanmax(total))
-    empty = np.where(total > 0.00000001, 0.0, total)
+    tree = np.where(np.isnan(tree), fill, tree)
+    grass = np.where(np.isnan(grass), fill, grass)
 
-    # Check sums to less than 1
-    #total = frec.frec[0,:,:] + fper.fper[0,:,:]
-    #total = np.where(total > 1.0, total, np.nan)
-    #plt.imshow(total)
-    #plt.colorbar()
-    #plt.show()
+    bare = 1.0 - tree - grass
+    bare = np.where(bare > 1.0, fill, bare)
+    total = tree + grass + bare
+    empty = np.where(np.logical_and(bare >= 0.0, bare <=1.0), 0.0, bare)
 
     # create file and write global attributes
     out_fname = os.path.join(output_dir, "patch_frac.nc")
@@ -62,33 +58,33 @@ def main():
     f.contact = "mdekauwe@gmail.com"
 
     # set dimensions
+    f.createDimension('patch', npfts)
     f.createDimension('y', nrows)
     f.createDimension('x', ncols)
-    f.createDimension('patch', npfts)
 
-    y = f.createVariable('y', 'f8', ('y',))
-    y.long_name = "y"
-    y.long_name = "y dimension"
-
-    x = f.createVariable('x', 'f8', ('x',))
-    x.long_name = "x"
-    x.long_name = "x dimension"
-
-    patch = f.createVariable('patch', 'f8', ('patch',))
+    patch = f.createVariable('patch', 'int', ('patch'))
     patch.long_name = "patch"
     patch.long_name = "patch dimensions"
 
-    latitude = f.createVariable('latitude', 'f8', ('y', 'x',))
+    y = f.createVariable('y', 'int', ('y'))
+    y.long_name = "y"
+    y.long_name = "y dimension"
+
+    x = f.createVariable('x', 'int', ('x'))
+    x.long_name = "x"
+    x.long_name = "x dimension"
+
+    latitude = f.createVariable('latitude', 'f8', ('y', 'x'))
     latitude.units = "degrees_north"
     latitude.missing_value = fill
     latitude.long_name = "Latitude"
 
-    longitude = f.createVariable('longitude', 'f8', ('y', 'x',))
+    longitude = f.createVariable('longitude', 'f8', ('y', 'x'))
     longitude.units = "degrees_east"
     longitude.missing_value = fill
     longitude.long_name = "Longitude"
 
-    patchfrac = f.createVariable("patchfrac", 'f8', ('patch', 'y', 'x',))
+    patchfrac = f.createVariable("patchfrac", 'f8', ('patch', 'y', 'x'))
     patchfrac.units = "[0-1]"
     patchfrac.missing_value = fill
     patchfrac.long_name = "Patch frac"
@@ -117,17 +113,12 @@ def main():
     patchfrac[15,:,:] = empty  #  lakes
     patchfrac[16,:,:] = empty  #  ice
 
-    #plt.imshow(tree)
-    #plt.colorbar()
-    #plt.show()
-
     f.close()
 
-    ds = xr.open_dataset(out_fname)
-    print(ds)
-    plt.imshow(ds.patchfrac[1,:,:])
-    plt.colorbar()
-    plt.show()
+    #ds = xr.open_dataset(out_fname)
+    #plt.imshow(ds.patchfrac[1,:,:])
+    #plt.colorbar()
+    #plt.show()
 
 if __name__ == "__main__":
 
