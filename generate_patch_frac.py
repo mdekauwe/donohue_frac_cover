@@ -43,6 +43,13 @@ def main():
     tree = np.where(np.isnan(tree), fill, tree)
     grass = np.where(np.isnan(grass), fill, grass)
 
+
+    veg_total = tree + grass
+    print( np.nanmin(veg_total),  np.nanmax(veg_total),  np.nanmean(veg_total) )
+
+    sys.exit()
+
+
     bare = 1.0 - tree - grass
     bare = np.where(bare > 1.0, fill, bare)
     total = tree + grass + bare
