@@ -45,6 +45,7 @@ def main():
 
 
     veg_total = tree + grass
+    veg_total = np.where(fper.fper[0,:,:].values < -500, fper.fper[0,:,:].values, veg_total)
     print( np.nanmin(veg_total),  np.nanmax(veg_total),  np.nanmean(veg_total) )
 
     sys.exit()
