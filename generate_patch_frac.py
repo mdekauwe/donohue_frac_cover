@@ -59,42 +59,53 @@ def main():
 
     # set dimensions
     f.createDimension('patch', npfts)
-    f.createDimension('y', nrows)
-    f.createDimension('x', ncols)
+    f.createDimension('lat', nrows)
+    f.createDimension('lon', ncols)
 
-    patch = f.createVariable('patch', 'int', ('patch'))
+    patch = f.createVariable('patch', 'int32', ('patch'))
     patch.long_name = "patch"
     patch.long_name = "patch dimensions"
 
-    y = f.createVariable('y', 'int', ('y'))
-    y.long_name = "y"
-    y.long_name = "y dimension"
+    #y = f.createVariable('y', 'int32', ('y'))
+    #y.long_name = "y"
+    #y.long_name = "y dimension"
 
-    x = f.createVariable('x', 'int', ('x'))
-    x.long_name = "x"
-    x.long_name = "x dimension"
+    #x = f.createVariable('x', 'int32', ('x'))
+    #x.long_name = "x"
+    #x.long_name = "x dimension"
 
-    latitude = f.createVariable('latitude', 'f8', ('y', 'x'))
+    latitude = f.createVariable('lat', 'f4', ('lat'))
     latitude.units = "degrees_north"
     latitude.missing_value = fill
     latitude.long_name = "Latitude"
+    latitude.standard_name = "latitude"
+    latitude.axis = "Y"
 
-    longitude = f.createVariable('longitude', 'f8', ('y', 'x'))
+    longitude = f.createVariable('lon', 'f4', ('lon'))
     longitude.units = "degrees_east"
     longitude.missing_value = fill
     longitude.long_name = "Longitude"
+    longitude.standard_name = "longitude"
+    longitude.axis = "X"
 
-    patchfrac = f.createVariable("patchfrac", 'f8', ('patch', 'y', 'x'))
+    patchfrac = f.createVariable("patchfrac", 'f4', ('patch', 'lat', 'lon'))
     patchfrac.units = "[0-1]"
     patchfrac.missing_value = fill
     patchfrac.long_name = "Patch frac"
 
+
     # write data to file
-    x[:] = np.arange(1, ncols+1)
-    y[:] = np.arange(1, nrows+1)
-    patch[:] = np.arange(1, npfts+1)
-    latitude[:,:] = fper.latitude.values
-    longitude[:,:] = fper.longitude.values
+    #x[:] = np.arange(1, ncols+1)
+    #y[:] = np.arange(1, nrows+1)
+    #patch[:] = np.arange(1, npfts+1)
+    #lat[:] = nrows
+    #lon[:] = ncols
+    #patch[:] = npfts
+    #latitude[:,:] = fper.latitude.values
+    #longitude[:,:] = fper.longitude.values
+    latitude[:] = fper.latitude.values[:,0]
+    longitude[:] = fper.longitude.values[0,:]
+
     patchfrac[0,:,:] = empty   #  evergreen_needleleaf
     patchfrac[1,:,:] = tree    #  evergreen_broadleaf
     patchfrac[2,:,:] = empty   #  deciduous_needleleaf
@@ -115,10 +126,10 @@ def main():
 
     f.close()
 
-    #ds = xr.open_dataset(out_fname)
-    #plt.imshow(ds.patchfrac[1,:,:])
-    #plt.colorbar()
-    #plt.show()
+    ds = xr.open_dataset(out_fname)
+    plt.imshow(ds.patchfrac[5,:,:])
+    plt.colorbar()
+    plt.show()
 
 if __name__ == "__main__":
 
