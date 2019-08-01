@@ -46,7 +46,7 @@ def main():
     bare = 1.0 - tree - grass
     bare = np.where(bare > 1.0, fill, bare)
     total = tree + grass + bare
-    empty = np.where(np.logical_and(bare >= 0.0, bare <=1.0), 0.0, bare)
+    empty = np.where(np.logical_and(bare >= 0.0, bare <= 1.0), 0.0, bare)
 
     # create file and write global attributes
     out_fname = os.path.join(output_dir, "patch_frac.nc")
