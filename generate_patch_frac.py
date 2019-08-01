@@ -40,8 +40,8 @@ def main():
 
     tree = fper.fper[0,:,:].values
     grass = frec.frec[0,:,:].values
-    tree = np.where(np.isnan(tree), fill, tree)
-    grass = np.where(np.isnan(grass), fill, grass)
+    tree = np.where(np.logical_or(np.isnan(tree), np.isnan(grass)), fill, tree)
+    grass = np.where(np.logical_or(np.isnan(tree), np.isnan(grass)), fill, grass)
 
 
     veg_total = tree + grass
