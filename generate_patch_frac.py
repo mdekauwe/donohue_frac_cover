@@ -42,10 +42,11 @@ def main():
     grass = frec.frec[0,:,:].values
     tree = np.where(np.logical_or(np.isnan(tree), np.isnan(grass)), fill, tree)
     grass = np.where(np.logical_or(np.isnan(tree), np.isnan(grass)), fill, grass)
+    tree = np.where(tree < -500.0, fill, tree)
+    grass = np.where(grass < -500.0, fill, grass)
 
 
-    veg_total = tree + grass
-    veg_total = np.where(fper.fper[0,:,:].values < -500, fper.fper[0,:,:].values, veg_total)
+    veg_total = np.where( tree < -500.0, fill, tree + grass )
     print( np.nanmin(veg_total),  np.nanmax(veg_total),  np.nanmean(veg_total) )
 
     sys.exit()
