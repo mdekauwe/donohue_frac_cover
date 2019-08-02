@@ -26,14 +26,26 @@ def main():
     fname = "nc_files/patch_frac/patch_frac.nc"
     ds = xr.open_dataset(fname)
     frac = ds.patchfrac[0,:,:]
-    for i in range(0, 17):
-        print( i, np.nanmin(ds.patchfrac[i,:,:]),  np.nanmax(ds.patchfrac[i,:,:]), np.nanmean(ds.patchfrac[i,:,:]))
+    #for i in range(0, 17):
+    #    print( i, np.nanmin(ds.patchfrac[i,:,:]),  np.nanmax(ds.patchfrac[i,:,:]), np.nanmean(ds.patchfrac[i,:,:]))
+
+
 
     fracs = ds.patchfrac[1,:,:] + ds.patchfrac[5,:,:] + ds.patchfrac[13,:,:]
+
+    nrows, ncols = fracs.shape
+    for r in range(nrows):
+        for c in range(ncols):
+            if fracs[r,c] > 1.0:
+                print(r,c)
+                print( fracs[r,c].values, ":", ds.patchfrac[1,r,c].values , ds.patchfrac[5,r,c].values , ds.patchfrac[13,r,c].values )
+
+    sys.exit()
+
     print(  np.nanmin(fracs),  np.nanmax(fracs), np.nanmean(fracs) )
     #fracs = np.where(fracs <0.0, fracs, np.nan)
-    plt.hist(fracs.values.flatten())
-    #plt.colorbar()
+    plt.imshow(fracs)
+    plt.colorbar()
     plt.show()
 
 if __name__ == "__main__":

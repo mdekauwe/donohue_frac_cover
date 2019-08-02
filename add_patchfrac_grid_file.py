@@ -33,10 +33,11 @@ def main():
     ds_out = ds.copy(deep=True)
     ds_out = ds_out.drop("patch")
     ds_out = ds_out.drop("patchfrac")
+    ds_out = ds_out.drop("iveg")
 
     ds_out.to_netcdf(out_fname)
     ds_out.close()
-    
+
     f = netCDF4.Dataset(out_fname, 'r+')
 
     nc_attrs = f.ncattrs()
@@ -54,9 +55,25 @@ def main():
     patchfrac.missing_value = -999.0
     patchfrac.long_name = "Patch frac"
 
+    iveg = f.createVariable("iveg", 'f4', ('patch', 'latitude', 'longitude'))
+    iveg.units = "-"
+    iveg.missing_value = -9999.0
+
     patch[:] = np.arange(1, 17+1)
     patchfrac[:,:,:] = ds_pch.patchfrac.values
 
+    keep = ds_pch.patchfrac.values
+    keep *= 0.0
+    for i in range(17):
+        keep[i,:,:] = i+1
+    keep = np.where(patchfrac[1,:,:] >= 0.0, keep, -9999.0)
+
+    #plt.imshow(keep[1,:,:])
+    #plt.colorbar()
+    #plt.show()
+    #sys.exit()
+
+    iveg[:,:,:] = keep
     f.close()
 
 

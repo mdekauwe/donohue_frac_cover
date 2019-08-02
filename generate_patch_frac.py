@@ -45,14 +45,16 @@ def main():
     tree = np.where(tree < -500.0, fill, tree)
     grass = np.where(grass < -500.0, fill, grass)
 
-
-    veg_total = np.where( tree < -500.0, fill, tree + grass )
-    
-
     bare = np.where( tree < -500.0, fill, 1.0 - tree - grass )
     bare = np.where(bare > 1.0, fill, bare)
     #empty = np.where(np.logical_and(bare >= 0.0, bare <= 1.0), 0.0, bare)
     empty = np.where(tree < -500.0, fill, 0.0)
+
+
+    veg_total = np.where( tree < -500.0, fill, tree + grass + bare )
+    bare = np.where( veg_total > 1.0, bare - (1.0-veg_total), bare)
+
+
 
     # create file and write global attributes
     out_fname = os.path.join(output_dir, "patch_frac.nc")
