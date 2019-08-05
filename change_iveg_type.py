@@ -24,11 +24,16 @@ import netCDF4
 def main():
 
     in_fname = "/Users/mdekauwe/Desktop/gridinfo_mmy_MD_elev_orig_std_avg-sand_mask.nc"
-    out_fname = "/Users/mdekauwe/Desktop/gridinfo_mmy_MD_elev_orig_std_avg-sand_mask_MDK_patch.nc"
+    out_fname = "/Users/mdekauwe/Desktop/gridinfo_mmy_MD_elev_orig_std_avg-sand_mask_EBF_patch.nc"
 
     ds = xr.open_dataset(in_fname)
+
+    iveg_changed = np.where(ds.iveg == 2.0, 2.0, ds.iveg )
+
+    #iveg_changed = np.where(ds.iveg == 9.0, 2.0, ds.iveg ) # EBF
+    #iveg_changed = np.where(ds.iveg == 5.0, 2.0, -9999.0) # EBF
     #iveg_changed = np.where(ds.iveg > 0.0, 2.0, -9999.0) # EBF
-    iveg_changed = np.where(ds.iveg > 0.0, 6.0, -9999.0) # C3G
+    #iveg_changed = np.where(ds.iveg > 0.0, 6.0, -9999.0) # C3G
 
     ds_out = ds.copy(deep=True)
     ds_out = ds_out.drop("iveg")
