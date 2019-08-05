@@ -28,7 +28,8 @@ def main():
 
     ds = xr.open_dataset(in_fname)
 
-    iveg_changed = np.where(ds.iveg == 2.0, 2.0, ds.iveg )
+    iveg_changed = ds.iveg.values.astype(int)
+    iveg_changed = np.where(iveg_changed > 0, 2, iveg_changed)
 
     #iveg_changed = np.where(ds.iveg == 9.0, 2.0, ds.iveg ) # EBF
     #iveg_changed = np.where(ds.iveg == 5.0, 2.0, -9999.0) # EBF
@@ -47,14 +48,12 @@ def main():
     nc_dims = [dim for dim in f.dimensions]
     nc_vars = [var for var in f.variables]
 
-    iveg = f.createVariable("iveg", 'f4', ('latitude', 'longitude'))
+    iveg = f.createVariable("iveg", 'i4', ('latitude', 'longitude'))
     iveg.units = "-"
-    iveg.missing_value = -9999.0
-
+    iveg.missing_value = -1
 
     iveg[:,:] = iveg_changed
     f.close()
-
 
     ds.close()
 
