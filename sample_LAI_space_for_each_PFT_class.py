@@ -57,18 +57,18 @@ n21l,n21u = ( np.nanmean(lai[iveg == 21])-np.nanstd(lai[iveg == 21]),
               np.nanmean(lai[iveg == 21])+np.nanstd(lai[iveg == 21]) )
 n22l,n22u = ( np.nanmean(lai[iveg == 22])-np.nanstd(lai[iveg == 22]),
               np.nanmean(lai[iveg == 22])+np.nanstd(lai[iveg == 22]) )
-print( "18 ", round(n18l, 2), "-", round(n18u, 2) )
-print( "19 ", round(n19l, 2), "-", round(n19u, 2) )
-print( "20 ", round(n20l, 2), "-", round(n20u, 2) )
-print( "21 ", round(n21l, 2), "-", round(n21u, 2) )
-print( "22 ", round(n22l, 2), "-", round(n22u, 2) )
+print( "18 ", round(n18l, 2), "-", round(n18u, 2), round(np.nanmean(lai[iveg == 18]),2) )
+print( "19 ", round(n19l, 2), "-", round(n19u, 2), round(np.nanmean(lai[iveg == 19]),2) )
+print( "20 ", round(n20l, 2), "-", round(n20u, 2), round(np.nanmean(lai[iveg == 20]),2) )
+print( "21 ", round(n21l, 2), "-", round(n21u, 2), round(np.nanmean(lai[iveg == 21]),2) )
+print( "22 ", round(n22l, 2), "-", round(n22u, 2) , round(np.nanmean(lai[iveg == 22]),2) )
 
 """
-18  4.78 - 6.94
-19  3.46 - 6.19
-20  1.43 - 4.75
-21  1.27 - 3.39
-22  0.34 - 1.67
+18  4.78 - 6.94 5.86
+19  3.46 - 6.19 4.83
+20  1.43 - 4.75 3.09
+21  1.27 - 3.39 2.33
+22  0.34 - 1.67 1.0
 """
 #lai = np.where(iveg !=22, np.nan, lai)
 #
