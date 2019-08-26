@@ -63,7 +63,13 @@ print( "20 ", round(n20l, 2), "-", round(n20u, 2) )
 print( "21 ", round(n21l, 2), "-", round(n21u, 2) )
 print( "22 ", round(n22l, 2), "-", round(n22u, 2) )
 
-
+"""
+18  4.78 - 6.94
+19  3.46 - 6.19
+20  1.43 - 4.75
+21  1.27 - 3.39
+22  0.34 - 1.67
+"""
 #lai = np.where(iveg !=22, np.nan, lai)
 #
 #plt.imshow(lai)
