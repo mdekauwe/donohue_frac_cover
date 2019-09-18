@@ -28,9 +28,9 @@ def main():
     out_fname = "/Users/mdekauwe/Desktop/gridinfo_mmy_MD_elev_orig_std_avg-sand_mask_grass_patch.nc"
     ds = xr.open_dataset(in_fname)
 
-    #iveg_changed = np.where(ds.iveg == 2.0, 2.0, ds.iveg)
-    #iveg_changed = np.where(ds.iveg > 0, 2, ds.iveg ) # EBF
-    iveg_changed = np.where(ds.iveg > 0, 6, ds.iveg ) # grasss
+    iveg_changed = ds.iveg.values.astype(int)
+    iveg_changed = np.where(iveg_changed > 0, 2, iveg_changed) # EBF
+    iveg_changed = np.where(iveg_changed > 0, 6, iveg_changed) # grass
 
     ds_out = ds.copy(deep=True)
     ds_out = ds_out.drop("iveg")
@@ -51,7 +51,6 @@ def main():
 
     iveg[:,:] = iveg_changed
     f.close()
-
 
     ds.close()
 
