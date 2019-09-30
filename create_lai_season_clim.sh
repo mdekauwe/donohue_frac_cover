@@ -3,7 +3,7 @@
 i=0
 for F in nc_files/lai/gimms3g-lai-bimonth-*;
 do
-    echo $i
+    echo $i $F
     if [ $i -eq 0 ]; then
         previous=$F
         echo $previous
@@ -18,5 +18,4 @@ do
 done
 mv tmp.nc nc_files/lai/joined.nc
 
-#cdo mergetime nc_files/lai/* nc_files/lai/joined.nc
-cdo yseasmax nc_files/lai/joined.nc nc_files/lai/lai_max.nc
+cdo ymonmean nc_files/lai/joined.nc nc_files/lai/lai_climatology.nc
