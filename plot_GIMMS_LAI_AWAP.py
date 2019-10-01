@@ -20,21 +20,17 @@ import sys
 
 fname = "lai_climatology_AWAP_grid.nc"
 ds = xr.open_dataset(fname)
-LAI = ds.LAI
-print(ds)
 
-sys.exit()
-
-lat_bnds, lon_bnds = [-40, -28], [140, 154]
+lat_bnds, lon_bnds = [-28,-40], [140, 154]
 ds = ds.sel(latitude=slice(*lat_bnds), longitude=slice(*lon_bnds))
 
+LAI = ds.LAI[:,:,:]
+LAI = np.max(LAI, axis=0)
 
-lc = ds.iveg.values
-lc = np.flipud(lc)
 lat = ds.latitude.values
 lon = ds.longitude.values
 
-bottom, top = lat[0], lat[-1]
+top, bottom = lat[0], lat[-1]
 left, right = lon[0], lon[-1]
 
 fig = plt.figure(figsize=(9,6))
@@ -56,22 +52,19 @@ ax.coastlines(resolution='10m', linewidth=1.0, color='black')
 ax.add_feature(cartopy.feature.OCEAN)
 
 cmap = plt.cm.viridis
-bounds = np.unique(lc[~np.isnan(lc)])
-print(bounds)
-bounds = np.append(bounds, bounds[-1]+1)
-norm = colors.BoundaryNorm(bounds, cmap.N)
-labels = ["RAF", "WSF", "DSF", "GRW", "SAW"]
+
+#bounds = np.append(0, 6)
+#norm = colors.BoundaryNorm(bounds, cmap.N)
+#labels = ["RAF", "WSF", "DSF", "GRW", "SAW"]
 
 
-img = ax.imshow(lc, origin='upper', transform=ccrs.PlateCarree(),
-                interpolation='nearest', cmap=cmap, norm=norm,
+img = ax.imshow(LAI, origin='upper', transform=ccrs.PlateCarree(),
+                interpolation='nearest', cmap=cmap,
                 extent=(left, right, bottom, top))
-cbar = plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds,
+cbar = plt.colorbar(img, cmap=cmap,
                     orientation='vertical', shrink=0.7, pad=0.07)
-cbar.set_ticklabels(labels)
-tick_locs = [18.5, 19.5, 20.5, 21.5, 22.5, 23.5, 24.5, 25.5, 26.5]
-cbar.set_ticks(tick_locs)
-cbar.ax.set_title("Vegetation\ntypes", fontsize=12)
+
+cbar.ax.set_title("LAI", fontsize=12)
 
 #ax.set_ylabel("Latitude")
 #ax.set_xlabel("Longtiude")
@@ -83,5 +76,5 @@ ax.text(0.5, -0.1, 'Longitude', va='bottom', ha='center',
         transform=ax.transAxes)
 #
 plt.show()
-fig.savefig("SE_AUS_veg_types_AWAP.png", dpi=150, bbox_inches='tight',
+fig.savefig("LAI_gimms.png", dpi=150, bbox_inches='tight',
             pad_inches=0.1)
