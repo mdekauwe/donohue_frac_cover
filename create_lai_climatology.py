@@ -26,34 +26,48 @@ ny = 681
 nx = 841
 nmonths = 12
 
+#"""
 files = sorted(glob.glob("nc_files/lai/gimms3g*.nc"))
 clim = np.zeros((nmonths,ny,nx))
-count = 0
-biweek_count = 0
+month_count = np.zeros((nmonths,ny,nx))
+
 for f in files:
 
     fn = os.path.basename(f)
     year = int(fn.split("-")[3][0:4])
     month = int(fn.split("-")[3][5:6])
     day = int(fn.split("-")[3][7:8])
-    if year > 1981:
-        print(year, month, day, count)
+    if year > 1981 and year < 2016:
+        print(year, month, day)
         ds = xr.open_dataset(f)
 
         if day == 1: # first of biweekly files
             sum_lai = ds.lai[0,:,:]
-            biweek_count = 0
         elif day == 6:
             sum_lai += ds.lai[0,:,:]
             sum_lai /= 2.0
             clim[month-1,:,:] += sum_lai
-            count += 1
+            month_count[month-1,:,:] += 1.0
+
 
         ds.close()
+clim = np.where(np.isnan(clim), -999.9, clim / month_count)
 
-clim /= float(count)
+
+fp = open('test.dat', "wb")
+clim.tofile(fp)
+fp.close()
+
+#sys.exit()
+#"""
+clim = np.fromfile('test.dat').reshape(nmonths,ny,nx)
+clim = np.where(clim < -900.0, np.nan, clim)
+
 print(clim.shape)
-
+plt.imshow(clim[1,:,:])
+plt.colorbar()
+plt.show()
+sys.exit()
 
 # create file and write global attributes
 out_fname = "test.nc"
@@ -78,7 +92,7 @@ x.long_name = "x dimension"
 
 n_timesteps = 1
 times = []
-months = 0
+secs = 0.0
 for i in range(1,13):
     times.append(secs)
     days_in_month = monthrange(2011,i)[1] # not a leapyear
