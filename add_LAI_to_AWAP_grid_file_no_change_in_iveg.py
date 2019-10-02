@@ -19,8 +19,9 @@ from os.path import join
 
 def main():
 
-    path = "/Users/mdekauwe/Desktop/"
-    source = xr.open_dataset(join(path, 'SE_aus_veg_types_AWAP_grid.nc'))
+    path = "/Users/mdekauwe/Desktop/SE_AUS_AWAP_grid_mask_files/raw"
+    source = xr.open_dataset(join(path,
+                             'MD_elev_orig_std_avg-sand_AWAP_AU_mask.nc'))
 
     se_aus = xr.open_dataset('lai_climatology_AWAP_grid.nc')
 
@@ -40,7 +41,7 @@ def main():
     #sys.exit()
     # First had to do
     # cdo sellonlatbox,112,154,-44,-10 data/SE_aus_veg_types_AWAP_grid.nc data/SE_aus_veg_types_AWAP_fixed_grid.nc
-    out_grid_fname = "/Users/mdekauwe/Desktop/SE_aus_veg_types_AWAP_plus_LAI_grid.nc"
+    out_grid_fname = "/Users/mdekauwe/Desktop/SE_aus_std_iveg_AWAP_plus_LAI_grid.nc"
 
     # This is the original values
     #source.iveg.plot(vmin=0, vmax=22)
