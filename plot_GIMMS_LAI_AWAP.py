@@ -18,19 +18,21 @@ import cartopy
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 import sys
 
-fname = "lai_climatology_AWAP_grid.nc"
+#fname = "/Users/mdekauwe/Desktop/SE_aus_veg_types_AWAP_plus_LAI_grid.nc"
+fname = "/Users/mdekauwe/Desktop/SE_aus_veg_types_AWAP_grid.nc"
 ds = xr.open_dataset(fname)
 
-lat_bnds, lon_bnds = [-28,-40], [140, 154]
+lat_bnds, lon_bnds = [-40,-28], [140, 154]
 ds = ds.sel(latitude=slice(*lat_bnds), longitude=slice(*lon_bnds))
 
 LAI = ds.LAI[:,:,:]
 LAI = np.max(LAI, axis=0)
+LAI = np.where(LAI < 0.0, np.nan, LAI)
 
 lat = ds.latitude.values
 lon = ds.longitude.values
 
-top, bottom = lat[0], lat[-1]
+bottom, top = lat[0], lat[-1]
 left, right = lon[0], lon[-1]
 
 fig = plt.figure(figsize=(9,6))
@@ -54,12 +56,13 @@ ax.add_feature(cartopy.feature.OCEAN)
 cmap = plt.cm.viridis
 
 #bounds = np.append(0, 6)
-#norm = colors.BoundaryNorm(bounds, cmap.N)
+#norm = colors.BoundaryNorm(bounds, cmap)
+
 #labels = ["RAF", "WSF", "DSF", "GRW", "SAW"]
 
 
-img = ax.imshow(LAI, origin='upper', transform=ccrs.PlateCarree(),
-                interpolation='nearest', cmap=cmap,
+img = ax.imshow(LAI, origin='lower', transform=ccrs.PlateCarree(),
+                interpolation='nearest', cmap=cmap, vmin=0, vmax=5,
                 extent=(left, right, bottom, top))
 cbar = plt.colorbar(img, cmap=cmap,
                     orientation='vertical', shrink=0.7, pad=0.07)
