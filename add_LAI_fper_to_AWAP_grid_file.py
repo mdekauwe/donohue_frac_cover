@@ -26,20 +26,32 @@ def main():
     path = "/Users/mdekauwe/Desktop/"
     source = xr.open_dataset(join(path, 'SE_aus_veg_types_AWAP_grid.nc'))
 
-    se_aus = xr.open_dataset('lai_climatology_AWAP_grid.nc')
-    lai = se_aus.LAI.values.copy()
-    for i in range(12):
-        lai[i,:,:] *= fper
-        se_aus.LAI[i,:,:] = lai[i,:,:]
+    #se_aus = xr.open_dataset('lai_climatology_AWAP_grid.nc')
+    #lai = se_aus.LAI.values.copy()
+    #for i in range(12):
+    #    lai[i,:,:] *= fper
+    #    se_aus.LAI[i,:,:] = lai[i,:,:]
 
     # AWAP data is upside down, flip it
+    #for i in range(12):
+    #    se_aus["LAI"][i,:,:] = np.flipud(se_aus["LAI"][i,:,:])
+
+    # apply fper to copernicus
+    lai = source.LAI.values.copy()
     for i in range(12):
-        se_aus["LAI"][i,:,:] = np.flipud(se_aus["LAI"][i,:,:])
+        lai[i,:,:] *= fper
+        #source.LAI[i,:,:] = lai[i,:,:]
+
+
+
+    # AWAP data is upside down, flip it
+    #for i in range(12):
+    #    se_aus["LAI"][i,:,:] = np.flipud(se_aus["LAI"][i,:,:])
 
     # Rounding issue on the lat lon, so they won't match, just use the
     # AWAP grid vals.
-    se_aus["latitude"] = source["latitude"]
-    se_aus["longitude"] = source["longitude"]
+    #se_aus["latitude"] = source["latitude"]
+    #se_aus["longitude"] = source["longitude"]
 
 
 
@@ -61,7 +73,11 @@ def main():
     # Where se_aus.iveg is defined (found using numpy.isfinite) use the values
     # from se_aus.iveg
     # Elsewhere use the original values from source.iveg
-    merged_LAI = xr.where(np.isfinite(se_aus.LAI), se_aus.LAI, source.LAI)
+
+    #se_aus = se_aus.drop("time")
+
+    #merged_LAI = xr.where(np.isfinite(se_aus.LAI), se_aus.LAI, source.LAI)
+    merged_LAI = xr.where(np.isfinite(lai), lai, source.LAI)
 
     # Copy the netcdf metadata to the new field (type, missing values)
     merged_LAI.encoding = source.LAI.encoding
