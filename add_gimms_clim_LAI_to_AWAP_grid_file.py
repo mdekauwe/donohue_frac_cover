@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 """
-Add the newly created iveg PFTs to the CABLE gridinfo file
+Add the gimms LAI to the newly created iveg CABLE gridinfo file
 
 That's all folks.
 """
 __author__ = "Martin De Kauwe"
-__version__ = "1.0 (01.08.2019)"
+__version__ = "1.0 (10.02.2020)"
 __email__ = "mdekauwe@gmail.com"
 
 import pandas as pd
@@ -17,12 +17,11 @@ import os
 import sys
 from os.path import join
 
-def main():
 
-    path = "/Users/mdekauwe/Desktop/"
-    source = xr.open_dataset(join(path, 'SE_aus_veg_types_AWAP_grid.nc'))
+def main(gimms_lai_clim_fname, grid_fname, out_grid_fname):
 
-    se_aus = xr.open_dataset('lai_climatology_AWAP_grid.nc')
+    source = xr.open_dataset(grid_fname)
+    se_aus = xr.open_dataset(gimms_lai_clim_fname)
 
     # AWAP data is upside down, flip it
     for i in range(12):
@@ -40,14 +39,13 @@ def main():
     #sys.exit()
     # First had to do
     # cdo sellonlatbox,112,154,-44,-10 data/SE_aus_veg_types_AWAP_grid.nc data/SE_aus_veg_types_AWAP_fixed_grid.nc
-    out_grid_fname = "/Users/mdekauwe/Desktop/SE_aus_veg_types_AWAP_plus_LAI_grid.nc"
 
     # This is the original values
     #source.iveg.plot(vmin=0, vmax=22)
 
     # Netcdf metadata with the type and fill value
     source.LAI.encoding
-    print (source.LAI.encoding)
+    #print (source.LAI.encoding)
 
     # Merge the two fields
     # Where se_aus.iveg is defined (found using numpy.isfinite) use the values
@@ -65,8 +63,24 @@ def main():
     # file
     source['LAI'] = merged_LAI
 
-    source.to_netcdf(os.path.join(path, out_grid_fname))
+
+    source.to_netcdf(out_grid_fname)
 
 if __name__ == "__main__":
 
-    main()
+    gimms_lai_clim_fname = "lai_climatology_AWAP_grid.nc"
+
+    grid_path = "/Users/mdekauwe/Desktop"
+
+    grid_fname = "SE_AU_AWAP_NVIS_iveg_csiro_soil_grid.nc"
+    grid_fname = join(grid_path, grid_fname)
+    out_grid_fname = "SE_AU_AWAP_NVIS_iveg_csiro_soil_gimms_lai_grid.nc"
+    out_grid_fname = join(grid_path, out_grid_fname)
+    main(gimms_lai_clim_fname, grid_fname, out_grid_fname)
+
+
+    grid_fname = "SE_AU_AWAP_NVIS_iveg_openland_soil_grid.nc"
+    grid_fname = join(grid_path, grid_fname)
+    out_grid_fname = "SE_AU_AWAP_NVIS_iveg_openland_soil_gimms_lai_grid.nc"
+    out_grid_fname = join(grid_path, out_grid_fname)
+    main(gimms_lai_clim_fname, grid_fname, out_grid_fname)
