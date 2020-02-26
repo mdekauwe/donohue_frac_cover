@@ -22,7 +22,7 @@ def main(tree_frac_fname, grid_fname, out_grid_fname):
 
 
     ds_per = xr.open_dataset(tree_frac_fname)
-    fper = np.flipud(ds_per.fper[0,:,:]) # other way round from LAI
+    fper = ds_per.fper[0,:,:]
 
     source = xr.open_dataset(grid_fname)
 
@@ -37,9 +37,18 @@ def main(tree_frac_fname, grid_fname, out_grid_fname):
     #    se_aus["LAI"][i,:,:] = np.flipud(se_aus["LAI"][i,:,:])
 
     # apply fper to copernicus
+
     lai = source.LAI.values.copy()
+
     for i in range(12):
         lai[i,:,:] *= fper
+
+    #plt.imshow(np.mean(lai, axis=0))
+    #plt.imshow(fper)
+    #plt.colorbar()
+    ##plt.imshow(fper)
+    #plt.show()
+    #sys.exit()
         #source.LAI[i,:,:] = lai[i,:,:]
 
 
@@ -95,11 +104,13 @@ if __name__ == "__main__":
 
     # from gimms3g_AWAP_grid/nc_files/fper
     # made by running combine_and_average_cover_fracs.sh
-    tree_frac_fname = "/Users/mdekauwe/Desktop/mean_fper.nc"
+    tree_frac_fname = "mean_fper.nc"
+    #tree_frac_fname = "/Users/mdekauwe/Desktop/mean_fper.nc"
 
     # CSIRO soil, copernicus lai
     grid_path = "/Users/mdekauwe/Desktop"
-    grid_fname = "SE_AU_AWAP_NVIS_iveg_csiro_soil_grid.nc"
+    #grid_fname = "SE_AU_AWAP_NVIS_iveg_csiro_soil_grid.nc"
+    grid_fname = "gridinfo_AWAP_CSIRO_AU_NAT_new_iveg.nc"
     grid_fname = join(grid_path, grid_fname)
 
     out_grid_path = "/Users/mdekauwe/Desktop/SE_AUS_AWAP_grid_mask_files/grid"
@@ -107,6 +118,7 @@ if __name__ == "__main__":
     out_grid_fname = join(out_grid_path, out_grid_fname)
     main(tree_frac_fname, grid_fname, out_grid_fname)
 
+    """
     # CSIRO soil, gimms lai
     grid_path = "/Users/mdekauwe/Desktop"
     grid_fname = "SE_AU_AWAP_NVIS_iveg_csiro_soil_gimms_lai_grid.nc"
@@ -137,3 +149,4 @@ if __name__ == "__main__":
     out_grid_fname = "SE_AU_AWAP_NVIS_iveg_openland_soil_gimms_lai_grid.nc"
     out_grid_fname = join(out_grid_path, out_grid_fname)
     main(tree_frac_fname, grid_fname, out_grid_fname)
+    """
